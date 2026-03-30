@@ -6,162 +6,210 @@
     <title>Stowarzyszenie GRANICA - Służby Graniczne RP</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300;400;700&family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Inter', sans-serif; background-color: #0d1b15; color: #f8fafc; }
-        .military-bg {
-            background: radial-gradient(circle at 10% 20%, rgba(27, 67, 50, 0.7) 0%, transparent 40%),
-                        radial-gradient(circle at 90% 80%, rgba(45, 106, 79, 0.4) 0%, transparent 40%),
-                        url('https://www.transparenttextures.com/patterns/stardust.png'), #0d1b15;
+        :root {
+            --sg-green: #0d1b15;
+            --sg-green-lighter: rgba(27, 67, 50, 0.5);
+            --sg-gold: #d4af37;
+        }
+        
+        body { font-family: 'Inter', sans-serif; background-color: var(--sg-green); color: #f8fafc; }
+        .font-mono { font-family: 'Roboto Mono', monospace; }
+
+        /* Dynamiczne Tło Taktyczne z Cząsteczkami */
+        .military-tactical-bg {
+            background-image: 
+                radial-gradient(circle at 15% 25%, rgba(45, 106, 79, 0.4) 0%, transparent 40%),
+                radial-gradient(circle at 85% 75%, rgba(27, 67, 50, 0.6) 0%, transparent 40%),
+                url('https://www.transparenttextures.com/patterns/carbon-fibre.png');
             background-attachment: fixed;
+            position: relative;
         }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        
+        #particles-js {
+            position: fixed;
+            width: 100%;
             height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1; /* Pod tekstem */
         }
+
+        .relative-content { position: relative; z-index: 10; } /* Treść nad cząsteczkami */
+
+        /* Szklane Karty "Taktyczne" - Ostre rogi i precyzyjne obramowania */
+        .tactical-panel {
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-left: 3px solid var(--sg-gold);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-right: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .tactical-panel:hover {
+            border-left: 3px solid #f8fafc; /* Równy dla wszystkich, brak złota */
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .tactical-btn {
+            background: rgba(212, 175, 55, 0.08);
+            border: 1px solid #d4af37;
+            transition: all 0.3s ease;
+        }
+        .tactical-btn:hover { background: #d4af37; color: black; border-color: #d4af37; }
+
         .text-gold { color: #d4af37; }
-        .bg-gold { background-color: #d4af37; }
         .logo-glow { filter: drop-shadow(0 0 25px rgba(212, 175, 55, 0.5)); }
         
-        #mobile-menu { transition: 0.3s ease-in-out; transform: translateX(100%); }
+        #mobile-menu { transition: transform 0.3s ease; transform: translateX(100%); }
         #mobile-menu.active { transform: translateX(0); }
 
-        .section-title::after { content: ''; display: block; width: 50px; height: 3px; background: #d4af37; margin: 15px auto; }
-        
-        .bio-text { hyphens: auto; text-align: justify; text-justify: inter-word; }
-        
-        /* Styl dla paragrafów statutu */
-        .statute-content p { margin-bottom: 1rem; opacity: 0.9; }
-        .statute-content h4 { color: #d4af37; font-weight: 800; text-transform: uppercase; margin-top: 2rem; margin-bottom: 1rem; }
-        
-        /* Zapobieganie łamaniu numerów tel */
-        .tel-link { white-space: nowrap; }
+        .section-title::after { content: ''; display: block; width: 60px; height: 3px; background: #d4af37; margin: 15px auto; }
+        .hyphens-auto { hyphens: auto; }
     </style>
 </head>
-<body class="military-bg overflow-x-hidden">
+<body class="military-tactical-bg overflow-x-hidden">
 
-    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10">
+    <div id="particles-js"></div>
+
+    <div class="relative-content">
+
+    <nav class="fixed w-full z-50 bg-black/60 backdrop-blur-md border-b border-white/5">
         <div class="container mx-auto px-6 py-4 flex justify-between items-center">
-            <div class="font-black text-xl tracking-tighter text-gold uppercase italic">Granica</div>
-            <button id="menu-btn" class="md:hidden text-gold text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
-            <div class="hidden md:flex space-x-8 text-[10px] font-bold uppercase tracking-widest">
+            <div class="flex items-center space-x-2">
+                <span class="font-black text-xl tracking-tighter text-gold border-r border-gold/30 pr-3 uppercase">Granica</span>
+                <span class="text-[9px] uppercase tracking-widest opacity-50 hidden md:block">Stowarzyszenie<br>Pamięci Granic</span>
+            </div>
+            
+            <div class="hidden lg:flex space-x-6 text-[10px] font-bold uppercase tracking-widest items-center">
+                <a href="#o-nas" class="hover:text-gold transition">O nas</a>
                 <a href="#rada" class="hover:text-gold transition">Władze</a>
                 <a href="#statut" class="hover:text-gold transition">Statut</a>
                 <a href="#pobierz" class="hover:text-gold transition">Pobierz</a>
-                <a href="#wplaty" class="text-gold border border-gold/40 px-4 py-1 hover:bg-gold hover:text-black transition">Wsparcie</a>
+                <a href="#kontakt" class="text-gold border border-gold/40 px-3 py-1 hover:bg-gold hover:text-black transition">Kontakt</a>
             </div>
+
+            <button id="menu-btn" class="lg:hidden text-gold text-2xl focus:outline-none"><i class="fas fa-bars"></i></button>
         </div>
     </nav>
 
-    <div id="mobile-menu" class="fixed inset-0 z-40 bg-black/98 flex flex-col items-center justify-center space-y-8 text-xl font-bold uppercase md:hidden">
-        <a href="#rada" class="mobile-link">Rada Stowarzyszenia</a>
-        <a href="#statut" class="mobile-link">Statut Pełny</a>
-        <a href="#pobierz" class="mobile-link text-gold">Dokumenty</a>
-        <a href="#wplaty" class="mobile-link">Wsparcie</a>
+    <div id="mobile-menu" class="fixed inset-0 z-40 bg-black/95 flex flex-col items-center justify-center space-y-8 text-xl font-bold uppercase tracking-widest lg:hidden">
+        <a href="#rada" class="mobile-link">Rada</a>
+        <a href="#komisja" class="mobile-link">Komisja</a>
+        <a href="#statut" class="mobile-link text-gold">Statut</a>
+        <a href="#pobierz" class="mobile-link">Pobierz</a>
         <button id="close-menu" class="mt-8 text-gold border border-gold rounded-full w-12 h-12 flex items-center justify-center"><i class="fas fa-times"></i></button>
     </div>
 
-    <section class="min-h-screen flex flex-col items-center justify-center px-6 pt-20 text-center">
-        <img src="nowe logo SG.png" alt="Logo" class="w-48 md:w-64 mb-10 logo-glow">
-        <h1 class="text-4xl md:text-7xl font-extrabold mb-4 uppercase tracking-tighter leading-tight">Na Straży <br><span class="text-gold italic">Pamięci i Honoru</span></h1>
-        <p class="max-w-2xl opacity-60 text-xs md:text-sm uppercase tracking-[0.2em] mb-12">Stowarzyszenie Byłych Żołnierzy i Funkcjonariuszy Służb Granicznych RP</p>
-        <div class="flex flex-wrap justify-center gap-4">
-            <a href="#pobierz" class="bg-gold text-black px-8 py-4 font-black uppercase text-xs tracking-widest hover:scale-105 transition">Pobierz Dokumenty</a>
+    <header class="min-h-screen flex items-center justify-center px-6 text-center pt-24">
+        <div class="max-w-3xl flex flex-col items-center">
+            <img src="nowe logo SG.png" alt="Logo" class="w-48 md:w-56 logo-glow mb-10">
+            <h1 class="text-5xl md:text-8xl font-black mb-4 uppercase tracking-tighter leading-tight">Na Straży <br><span class="text-gold italic">Pamięci i Honoru</span></h1>
+            <p class="text-xs md:text-sm uppercase tracking-[0.2em] mb-12 opacity-60">Stowarzyszenie Byłych Żołnierzy i Funkcjonariuszy Służb Granicznych RP</p>
+            <div class="flex flex-col sm:flex-row gap-4">
+                <a href="#rada" class="tactical-btn text-gold text-black px-10 py-4 font-black uppercase text-xs tracking-widest">Poznaj Władze</a>
+                <a href="#pobierz" class="tactical-btn border border-white/20 px-10 py-4 font-black uppercase text-xs tracking-widest">Pobierz Dokumenty</a>
+            </div>
         </div>
-    </section>
+    </header>
 
-    <section id="rada" class="py-20 px-4 bg-black/20">
+    <section id="rada" class="py-24 px-6 bg-black/20">
         <div class="container mx-auto max-w-6xl">
-            <h2 class="text-3xl font-black text-center mb-16 uppercase tracking-widest section-title">Rada Stowarzyszenia</h2>
+            <h2 class="text-4xl font-black text-center mb-16 uppercase section-title tracking-widest">Rada Stowarzyszenia</h2>
             <div class="grid lg:grid-cols-2 gap-8">
                 
-                <div class="glass-card p-6 md:p-10 rounded-3xl flex flex-col">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-black text-gold uppercase leading-tight">Andrzej Adamczyk</h3>
-                        <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest mb-4">Prezes (płk SG)</p>
-                        <a href="tel:882049472" class="tel-link inline-flex items-center bg-gold text-black px-5 py-2 rounded-lg text-sm font-black hover:bg-white transition">
-                            <i class="fas fa-phone-alt mr-3"></i> 882 049 472
+                <div class="tactical-panel p-8 rounded-sm">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 pb-4 border-b border-gold/10 gap-3">
+                        <div>
+                            <h3 class="text-2xl font-black text-gold uppercase tracking-tighter">Andrzej Adamczyk</h3>
+                            <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest italic mt-1">Prezes (płk SG)</p>
+                        </div>
+                        <a href="tel:882049472" class="text-sm font-bold border border-gold px-3 py-1 flex items-center gap-2 hover:bg-gold hover:text-black transition tel-link">
+                            <i class="fas fa-phone-alt text-gold text-xs"></i> 882 049 472
                         </a>
                     </div>
-                    <div class="bio-text text-sm leading-relaxed opacity-80">
-                        <p class="mb-4 text-justify">Urodził się w 1959 r. w Sierpcu. Służył w GPK WOP/PSG Warszawa-Okęcie, słuchacz WSO w Legionowie. Był Komendantem Placówki oraz zastępcą Dyrektora Zarządu Granicznego KG SG. Odznaczony Krzyżem Kawalerskim Orderu Odrodzenia Polski.</p>
-                    </div>
+                    <p class="hyphens-auto text-sm leading-relaxed opacity-80 text-justify mb-4">Służył w GPK WOP/PSG Warszawa-Okęcie, absolwent WSO Legionowo. Komendant Placówki i zastępca Dyrektora Zarządu Granicznego KG SG. Odznaczony Krzyżem Kawalerskim Orderu Odrodzenia Polski.</p>
                 </div>
 
-                <div class="glass-card p-6 md:p-10 rounded-3xl flex flex-col border-white/5">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-black text-gold uppercase leading-tight">Zbigniew Myka</h3>
-                        <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest mb-4">Wiceprezes (ppłk SG)</p>
-                        <a href="tel:668416728" class="tel-link inline-flex items-center bg-gold text-black px-5 py-2 rounded-lg text-sm font-black hover:bg-white transition">
-                            <i class="fas fa-phone-alt mr-3"></i> 668 416 728
+                <div class="tactical-panel p-8 rounded-sm">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 pb-4 border-b border-gold/10 gap-3">
+                        <div>
+                            <h3 class="text-2xl font-black text-gold uppercase tracking-tighter">Zbigniew Myka</h3>
+                            <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest italic mt-1">Wiceprezes (ppłk SG)</p>
+                        </div>
+                        <a href="tel:668416728" class="text-sm font-bold border border-gold px-3 py-1 flex items-center gap-2 hover:bg-gold hover:text-black transition tel-link">
+                            <i class="fas fa-phone-alt text-gold text-xs"></i> 668 416 728
                         </a>
                     </div>
-                    <div class="bio-text text-sm leading-relaxed opacity-80">
-                        <p class="mb-4 text-justify">Urodzony w 1967 r. w Węgorzewie. Absolwent WSO w Kętrzynie. Służył w GPK Warszawa-Okęcie oraz w Komendzie Głównej SG jako naczelnik wydziału w Biurze Ochrony Informacji Niejawnych. Absolwent UW.</p>
-                    </div>
+                    <p class="hyphens-auto text-sm leading-relaxed opacity-80 text-justify mb-4">Absolwent WSO Kętrzyn, słóżył w GPK Warszawa-Okęcie. Służbę zakończył jako naczelnik wydziału w Biurze Ochrony Informacji Niejawnych KG SG. Absolwent Uniwersytetu Warszawskiego.</p>
                 </div>
 
-                <div class="glass-card p-6 md:p-10 rounded-3xl flex flex-col">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-black text-gold uppercase leading-tight">Jerzy Bąk</h3>
-                        <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest mb-4">Skarbnik (kpt. SG)</p>
-                        <a href="tel:601235112" class="tel-link inline-flex items-center bg-gold text-black px-5 py-2 rounded-lg text-sm font-black hover:bg-white transition">
-                            <i class="fas fa-phone-alt mr-3"></i> 601 235 112
+                <div class="tactical-panel p-8 rounded-sm">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 pb-4 border-b border-gold/10 gap-3">
+                        <div>
+                            <h3 class="text-2xl font-black text-gold uppercase tracking-tighter">Jerzy Bąk</h3>
+                            <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest italic mt-1">Skarbnik (kpt. SG)</p>
+                        </div>
+                        <a href="tel:601235112" class="text-sm font-bold border border-gold px-3 py-1 flex items-center gap-2 hover:bg-gold hover:text-black transition tel-link">
+                            <i class="fas fa-phone-alt text-gold text-xs"></i> 601 235 112
                         </a>
                     </div>
-                    <div class="bio-text text-sm leading-relaxed opacity-80 text-justify">
-                        Urodzony w 1954 r. Służył w GPK Warszawa-Okęcie oraz w Dowództwie WOP. Absolwent Prawa na UW oraz SGH. Od 1999 r. syndyk upadłości przy Sądzie Okręgowym w Warszawie.
-                    </div>
+                    <p class="hyphens-auto text-sm leading-relaxed opacity-80 text-justify mb-4">Służył w GPK Warszawa-Okęcie i Dowództwie WOP. Absolwent Prawa na UW i SGH. Od 1999 r. syndyk upadłości przy Sądzie Okręgowym w Warszawie. Ekspert ds. administracji i funduszy UE.</p>
                 </div>
 
-                <div class="glass-card p-6 md:p-10 rounded-3xl flex flex-col">
-                    <div class="mb-6">
-                        <h3 class="text-2xl font-black text-gold uppercase leading-tight text-gold">Tomasz Waleriański</h3>
-                        <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest mb-4">mjr SG</p>
-                        <a href="tel:519869325" class="tel-link inline-flex items-center bg-gold text-black px-5 py-2 rounded-lg text-sm font-black hover:bg-white transition">
-                            <i class="fas fa-phone-alt mr-3"></i> 519 869 325
+                <div class="tactical-panel p-8 rounded-sm">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 pb-4 border-b border-gold/10 gap-3">
+                        <div>
+                            <h3 class="text-2xl font-black text-gold uppercase tracking-tighter">Tomasz Waleriański</h3>
+                            <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest italic mt-1">mjr SG</p>
+                        </div>
+                        <a href="tel:519869325" class="text-sm font-bold border border-gold px-3 py-1 flex items-center gap-2 hover:bg-gold hover:text-black transition tel-link">
+                            <i class="fas fa-phone-alt text-gold text-xs"></i> 519 869 325
                         </a>
                     </div>
-                    <div class="bio-text text-sm leading-relaxed opacity-80 text-justify">
-                        Urodzony w 1958 r. Ekspert z karierą dyplomatyczną (Austria, Szwajcaria, Niemcy). Służył w Zarządzie Granicznym KG SG. Specjalista w zakresie spraw administracyjno-finansowych.
-                    </div>
+                    <p class="hyphens-auto text-sm leading-relaxed opacity-80 text-justify mb-4">Pracował jako wicekonsul w Lipsku oraz kierownik wydziału w Ambasadach RP w Bernie, Wiedniu i Berlinie. Służył w Zarządzie Granicznym KG SG.</p>
                 </div>
             </div>
 
-            <div class="mt-8 grid md:grid-cols-2 gap-6">
-                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between border-gold/20">
-                    <div>
-                        <h4 class="text-xl font-bold text-gold uppercase">Dariusz Seweryn</h4>
-                        <p class="text-[10px] opacity-50 uppercase mb-4 tracking-widest italic">
-                            st. chor. sztab. SG | Tel: 
-                            <a href="tel:602535619" class="text-gold font-bold hover:underline tel-link">602 535 619</a>
-                        </p>
-                        <p class="text-xs opacity-80 leading-relaxed">Urodzony w 1965 r. Przez lata kontroler ruchu granicznego na lotnisku Okęcie. Służbę zakończył w Komendzie Głównej SG.</p>
+            <div class="grid md:grid-cols-2 gap-8 mt-8">
+                <div class="tactical-panel p-8 rounded-sm">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 pb-4 border-b border-gold/10 gap-3">
+                        <div>
+                            <h4 class="text-xl font-bold text-gold uppercase tracking-tighter">Dariusz Seweryn</h4>
+                            <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest italic mt-1">st. chor. sztab. SG</p>
+                        </div>
+                        <a href="tel:602535619" class="text-sm font-bold border border-gold px-3 py-1 flex items-center gap-2 hover:bg-gold hover:text-black transition tel-link">
+                            <i class="fas fa-phone-alt text-gold text-xs"></i> 602 535 619
+                        </a>
                     </div>
+                    <p class="text-sm leading-relaxed opacity-80 mb-4">Rozpoczął przygodę w Elblągu, kontroler na Okęciu (WOP i SG). Specjalista w KG SG.</p>
                 </div>
-                <div class="glass-card p-6 rounded-2xl flex flex-col justify-between border-gold/20">
-                    <div>
-                        <h4 class="text-xl font-bold text-gold uppercase">Jerzy Jasiński</h4>
-                        <p class="text-[10px] opacity-50 uppercase mb-4 tracking-widest italic">
-                            Ekspert Rady | Tel: 
-                            <a href="tel:506518116" class="text-gold font-bold hover:underline tel-link">506 518 116</a>
-                        </p>
-                        <p class="text-xs opacity-80 leading-relaxed">Wieloletni specjalista ds. migracji w GPK WOP Okęcie. Obecnie uznany ekspert ds. dokumentów współpracujący z placówkami USA.</p>
+                <div class="tactical-panel p-8 rounded-sm">
+                    <div class="flex flex-col md:flex-row md:items-start justify-between mb-6 pb-4 border-b border-gold/10 gap-3">
+                        <div>
+                            <h4 class="text-xl font-bold text-gold uppercase tracking-tighter">Jerzy Jasiński</h4>
+                            <p class="text-[11px] font-bold opacity-50 uppercase tracking-widest italic mt-1">Ekspert Rady</p>
+                        </div>
+                        <a href="tel:506518116" class="text-sm font-bold border border-gold px-3 py-1 flex items-center gap-2 hover:bg-gold hover:text-black transition tel-link">
+                            <i class="fas fa-phone-alt text-gold text-xs"></i> 506 518 116
+                        </a>
                     </div>
+                    <p class="text-sm leading-relaxed opacity-80 mb-4">Kontroler i specjalista ds. migracji w GPK WOP Okęcie. Ekspert ds. dokumentacji współpracujący z placówkami USA.</p>
                 </div>
             </div>
 
-            <div class="mt-8 glass-card p-6 rounded-2xl flex flex-wrap justify-between items-center border-white/10">
-                <div class="flex items-center space-x-4">
-                    <i class="fas fa-user-tie text-gold text-2xl"></i>
+            <div class="mt-8 tactical-panel p-6 rounded-sm flex flex-wrap justify-between items-center gap-4">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-file-invoice text-gold text-xl"></i>
                     <div>
-                        <h4 class="font-black text-xl uppercase">Tomasz Garwacki</h4>
-                        <p class="text-xs opacity-50 font-bold uppercase tracking-widest">Sekretarz Stowarzyszenia</p>
+                        <h4 class="font-black text-xl text-white">TOMASZ GARWACKI</h4>
+                        <p class="text-[10px] opacity-40 uppercase font-bold tracking-widest mt-1">Sekretarz Stowarzyszenia</p>
                     </div>
                 </div>
-                <a href="tel:608252708" class="text-gold font-black text-lg hover:text-white transition tel-link">
+                <a href="tel:608252708" class="border border-gold text-gold font-bold px-4 py-1 text-xs hover:bg-gold hover:text-black transition tel-link">
                     <i class="fas fa-phone-alt mr-2"></i> 608 252 708
                 </a>
             </div>
@@ -170,105 +218,124 @@
 
     <section id="komisja" class="py-16 px-6">
         <div class="container mx-auto">
-            <h2 class="text-2xl font-black text-center mb-10 uppercase tracking-widest section-title">Komisja Kontroli</h2>
+            <h2 class="text-3xl font-black text-center mb-16 uppercase section-title">Komisja Kontroli</h2>
             <div class="grid md:grid-cols-3 gap-6">
-                <div class="glass-card p-6 rounded-xl text-center border-gold/10">
-                    <h4 class="font-bold text-gold uppercase mb-1">Jarosław Nowak</h4>
-                    <p class="text-[10px] opacity-50 italic mb-3">Przewodniczący (płk SG)</p>
-                    <a href="tel:603958306" class="text-xs font-black text-gold hover:text-white transition tel-link">
-                        <i class="fas fa-phone-alt mr-1"></i> 603 958 306
-                    </a>
+                <div class="tactical-panel p-6 rounded-sm text-center">
+                    <i class="fas fa-shield-halved text-gold text-3xl mb-4"></i>
+                    <h4 class="font-bold text-lg uppercase">JAROSŁAW NOWAK</h4>
+                    <p class="text-xs text-gold uppercase mb-3 font-bold opacity-50">Przewodniczący (płk SG)</p>
+                    <a href="tel:603958306" class="bg-gold/10 border border-gold text-gold font-mono text-[10px] px-3 py-1 rounded-sm tel-link">603 958 306</a>
                 </div>
-                <div class="glass-card p-6 rounded-xl text-center border-white/5">
-                    <h4 class="font-bold text-gold uppercase mb-1">Małgorzata Kępińska</h4>
-                    <p class="text-[10px] opacity-50 italic uppercase">Wiceprzewodniczący</p>
+                <div class="tactical-panel p-6 rounded-sm text-center">
+                    <i class="fas fa-gavel text-gold text-3xl mb-4"></i>
+                    <h4 class="font-bold text-lg uppercase">Małgorzata Kępińska</h4>
+                    <p class="text-xs text-gold uppercase mb-3 font-bold opacity-50">Wiceprzewodniczący</p>
                 </div>
-                <div class="glass-card p-6 rounded-xl text-center border-white/5">
-                    <h4 class="font-bold text-gold uppercase mb-1">Józef Szymczyk</h4>
-                    <p class="text-[10px] opacity-50 italic uppercase">Sekretarz Komisji</p>
+                <div class="tactical-panel p-6 rounded-sm text-center">
+                    <i class="fas fa-clipboard-check text-gold text-3xl mb-4"></i>
+                    <h4 class="font-bold text-lg uppercase uppercase">Józef Szymczyk</h4>
+                    <p class="text-xs text-gold uppercase mb-3 font-bold opacity-50">Sekretarz Komisji</p>
                 </div>
             </div>
         </div>
     </section>
 
     <section id="statut" class="py-24 px-6 bg-black/40">
-        <div class="container mx-auto max-w-4xl">
+        <div class="container mx-auto max-w-4xl text-sm leading-loose text-justify text-slate-300">
             <h2 class="text-3xl font-black text-center mb-16 uppercase tracking-widest section-title">Statut Stowarzyszenia</h2>
-            <div class="glass-card p-8 md:p-12 rounded-[2rem] border-gold/20 statute-content bio-text text-sm leading-loose">
+            <div class="grid md:grid-cols-3 gap-8 pb-10 border-b border-gold/10">
+                <div class="glass-card p-6 border-gold/20 flex flex-col items-center">
+                    <div class="font-bold text-lg mb-2 text-gold">Postanowienia Ogólne</div>
+                    <div class="text-[13px] opacity-80 text-justify hyphens-auto">Stowarzyszenie zrzesza byłych żołnierzy i funkcjonariuszy SG RP. Siedziba m. st. Warszawa. Działa na terenie Rzeczypospolitej Polskiej.</div>
+                </div>
+                <div class="glass-card p-6 border-gold/20 flex flex-col items-center">
+                    <div class="font-bold text-lg mb-2 text-gold">Cele i Misja</div>
+                    <div class="text-[13px] opacity-80 text-justify hyphens-auto">Kultywowanie patriotyczno-historycznych tradycji formacji granicznych oraz integracja środowiska byłych funkcjonariuszy.</div>
+                </div>
+                <div class="glass-card p-6 border-gold/20 flex flex-col items-center">
+                    <div class="font-bold text-lg mb-2 text-gold">Składki i Majątek</div>
+                    <div class="text-[13px] opacity-80 text-justify hyphens-auto">Finansowanie celów statutowych następuje ze składek członków oraz darowizn. Nadzór sprawuje Komisja Kontroli.</div>
+                </div>
+            </div>
+            <div class="mt-8 text-center italic opacity-40 text-xs">Powyższe punkty stanowią wyciąg ze statutu stowarzyszenia. Pełna treść dostępna jest w dokumentacji stowarzyszenia.</div>
+        </div>
+    </section>
+
+    <section id="pobierz" class="py-24 px-6 border-t border-white/5">
+        <div class="container mx-auto">
+            <h2 class="text-3xl font-black text-center mb-16 uppercase tracking-widest section-title">Dokumentacja</h2>
+            
+            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                <div class="glass-card p-6 rounded-sm border-gold/20 flex items-center justify-between hover:border-gold/50 transition duration-300 group">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-id-card text-gold text-2xl"></i>
+                        <h4 class="text-xs font-black uppercase tracking-tight">Deklaracja Członkowska</h4>
+                    </div>
+                    <a href="deklaracja (1).pdf" download class="text-gold font-bold px-3 py-1 border border-gold/30 hover:bg-gold hover:text-black transition">Pobierz</a>
+                </div>
                 
-                <h4>Rozdział I: Postanowienia Ogólne</h4>
-                <p><strong>§ 1.</strong> Stowarzyszenie nosi nazwę: Stowarzyszenie Byłych Żołnierzy i Funkcjonariuszy Służb Granicznych Rzeczypospolitej Polskiej "GRANICA".</p>
-                <p><strong>§ 2.</strong> Stowarzyszenie jest dobrowolnym, samorządnym, trwałym zrzeszeniem o celach niezarobkowych.</p>
-                <p><strong>§ 3.</strong> Siedzibą Stowarzyszenia jest miasto stołeczne Warszawa.</p>
+                <div class="glass-card p-6 rounded-sm border-gold/20 flex items-center justify-between hover:border-gold/50 transition duration-300 group">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-hand-holding-dollar text-gold text-2xl"></i>
+                        <h4 class="text-xs font-black uppercase tracking-tight">Deklaracja Wpłat</h4>
+                    </div>
+                    <a href="deklaracja_wpłat.pdf" download class="text-gold font-bold px-3 py-1 border border-gold/30 hover:bg-gold hover:text-black transition">Pobierz</a>
+                </div>
 
-                <h4>Rozdział II: Cele i Ich Realizacja</h4>
-                <p><strong>§ 7.</strong> Celem Stowarzyszenia jest kultywowanie tradycji formacji granicznych RP, integracja środowiska oraz udzielanie pomocy członkom w trudnej sytuacji materialnej.</p>
-
-                <h4>Rozdział III: Członkowie</h4>
-                <p><strong>§ 11.</strong> Członkiem zwyczajnym może być każdy obywatel RP, który pełnił służbę w formacjach granicznych (WOP, SG).</p>
-
-                <div class="mt-12 text-center">
-                    <a href="statut.pdf" download class="inline-block bg-white/10 border border-white/20 px-8 py-3 font-black uppercase text-[10px] tracking-widest hover:bg-gold hover:text-black transition">Pobierz pełną treść statutu (PDF)</a>
+                <div class="glass-card p-6 rounded-sm border-gold/20 flex items-center justify-between hover:border-gold/50 transition duration-300 group">
+                    <div class="flex items-center space-x-4">
+                        <i class="fas fa-hand-holding-heart text-gold text-2xl"></i>
+                        <h4 class="text-xs font-black uppercase tracking-tight">Wniosek Pomoc Społeczna</h4>
+                    </div>
+                    <a href="#" download class="text-gold font-bold px-3 py-1 border border-gold/30 hover:bg-gold hover:text-black transition">Pobierz</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <section id="pobierz" class="py-24 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-5xl">
-            <h2 class="text-3xl font-black text-center mb-16 uppercase tracking-widest section-title">Dokumenty</h2>
-            <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                <a href="deklaracja (1).pdf" download class="glass-card p-6 rounded-2xl border-gold/10 flex items-center space-x-4 hover:bg-white/5 transition group">
-                    <i class="fas fa-file-pdf text-red-500 text-3xl"></i>
-                    <div class="grow">
-                        <p class="text-[10px] font-bold opacity-40 uppercase">PDF</p>
-                        <h5 class="text-xs font-black uppercase">Deklaracja Członkowska</h5>
-                    </div>
-                </a>
-
-                <a href="WNIOSEK_o_pom_soc.pdf" download class="glass-card p-6 rounded-2xl border-gold/10 flex items-center space-x-4 hover:bg-white/5 transition group">
-                    <i class="fas fa-hand-holding-heart text-green-500 text-3xl"></i>
-                    <div class="grow">
-                        <p class="text-[10px] font-bold opacity-40 uppercase">Wniosek</p>
-                        <h5 class="text-xs font-black uppercase">Pomoc Socjalna</h5>
-                    </div>
-                </a>
-
-                <a href="wniosekprzssoc.doc" download class="glass-card p-6 rounded-2xl border-gold/10 flex items-center space-x-4 hover:bg-white/5 transition group">
-                    <i class="fas fa-file-word text-blue-500 text-3xl"></i>
-                    <div class="grow">
-                        <p class="text-[10px] font-bold opacity-40 uppercase">DOC</p>
-                        <h5 class="text-xs font-black uppercase">Wniosek MSWiA</h5>
-                    </div>
-                </a>
+    <section id="kontakt" class="py-20 px-6 border-t border-white/5 bg-black/40">
+        <div class="container mx-auto max-w-4xl grid md:grid-cols-2 gap-10 items-center">
+            <div class="text-center md:text-left">
+                <div class="font-bold text-gold uppercase mb-1">Składki i Darowizny</div>
+                <div class="text-lg md:text-2xl font-black mb-1 leading-tight text-white uppercase italic">Wsparcie celów <span class="text-gold">statutowych</span></div>
+                <div class="text-xs md:text-sm leading-relaxed opacity-60">Dokonując wpłaty wspierasz statutową działalność stowarzyszenia. Poniżej nr konta w BNP Paribas.</div>
+            </div>
+            <div class="tactical-panel p-6 rounded-sm">
+                <div class="text-center text-[10px] uppercase font-bold text-gold mb-2 tracking-widest opacity-60">BNP PARIBAS</div>
+                <div class="text-lg md:text-2xl font-black tracking-widest select-all text-white text-center font-mono uppercase">74 1600 1462 1834 4689 7000 0001</div>
             </div>
         </div>
     </section>
 
-    <section id="wplaty" class="py-20 px-6 border-t border-white/5">
-        <div class="container mx-auto max-w-2xl text-center">
-            <h2 class="text-2xl font-black text-gold uppercase mb-6 italic">Wsparcie i Darowizny</h2>
-            <div class="bg-black/60 p-8 rounded-3xl border border-gold/30">
-                <p class="text-[10px] font-bold opacity-40 uppercase tracking-widest mb-3 leading-loose text-center">KONTO DO WPŁAT: Składki, darowizny, ofiarność publiczna</p>
-                <p class="text-lg md:text-2xl font-black tracking-widest select-all text-center">74 1600 1462 1834 4689 7000 0001</p>
-                <p class="mt-4 text-[11px] font-bold opacity-60 text-center uppercase">BNP PARIBAS</p>
-            </div>
-        </div>
-    </section>
-
-    <footer class="py-10 text-center opacity-30 text-[9px] uppercase tracking-[0.5em] font-bold">
+    <footer class="py-10 text-center opacity-30 text-[9px] uppercase tracking-[0.4em] font-bold border-t border-white/5">
         &copy; 2026 Stowarzyszenie "GRANICA" | Rzeczpospolita Polska
     </footer>
 
+    </div> <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
-        const btn = document.getElementById('menu-btn');
-        const close = document.getElementById('close-menu');
-        const menu = document.getElementById('mobile-menu');
-        const links = document.querySelectorAll('.mobile-link');
+        particlesJS("particles-js", {
+            particles: {
+                number: { value: 70, density: { enable: true, value_area: 700 } },
+                color: { value: "#ffffff" },
+                shape: { type: "circle" },
+                opacity: { value: 0.1, random: true },
+                size: { value: 1.5, random: true },
+                line_linked: { enable: true, distance: 110, color: "#ffffff", opacity: 0.03, width: 0.5 },
+                move: { enable: true, speed: 0.6, direction: "none", random: true, straight: false, out_mode: "out" }
+            },
+            interactivity: { events: { onhover: { enable: true, mode: "grab" } }, modes: { grab: { distance: 100, line_linked: { opacity: 0.1 } } } },
+            retina_detect: true
+        });
 
-        btn.addEventListener('click', () => menu.classList.add('active'));
-        close.addEventListener('click', () => menu.classList.remove('active'));
-        links.forEach(l => l.addEventListener('click', () => menu.classList.remove('active')));
+        // Hamburger Menu
+        const menuBtn = document.getElementById('menu-btn');
+        const closeMenuBtn = document.getElementById('close-menu');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileLinks = document.querySelectorAll('.mobile-link');
+
+        menuBtn.addEventListener('click', () => { mobileMenu.classList.add('active'); });
+        closeMenuBtn.addEventListener('click', () => { mobileMenu.classList.remove('active'); });
+        mobileLinks.forEach(link => { link.addEventListener('click', () => { mobileMenu.classList.remove('active'); }); });
     </script>
 </body>
 </html>
